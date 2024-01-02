@@ -31,6 +31,7 @@ bumper = False
 def callback_joy(data: Joy):
 	"""Callback function for the joystick subscriber"""
 	global vel_msg, button, bumper
+	print(f"Button states: {data.buttons}")
 	button = data.buttons[DEADMAN_SWITCH] 
 	bumper_button = data.buttons[DEADMAN_SWITCH - 1]
 	if button is not None: # hold down the dead-man switch to teleop the robot
