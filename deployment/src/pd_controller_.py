@@ -1,6 +1,7 @@
 import numpy as np
 import yaml
 from typing import Tuple
+import pickle
 
 # ROS
 import rospy
@@ -61,6 +62,10 @@ def pd_controller(waypoint: np.ndarray) -> Tuple[float]:
 	w = np.clip(w, -MAX_W, MAX_W)
 	return v, w
 
+def save_vel_msg_to_pickle(vel_msg, file_path):
+    with open(file_path, 'wb') as file:
+        pickle.dump(vel_msg, file)
+
 
 def callback_drive(waypoint_msg: Float32MultiArray):
 	"""Callback function for the waypoint subscriber"""
@@ -83,7 +88,6 @@ def main():
 	vel_out = rospy.Publisher(VEL_TOPIC, Twist, queue_size=1)
 	rate = rospy.Rate(RATE)
 	print("Registered with master node. Waiting for waypoints...")
-	
 	while not rospy.is_shutdown():
 		vel_msg = Twist()
 		if reached_goal:
@@ -100,6 +104,10 @@ def main():
 		vel_out.publish(vel_msg)
 		rate.sleep()
 	
+	# 呼叫函式儲存vel_msg
+	save_vel_msg_to_pickle(vel_msg, 'vel_msg.pkl')
+	
 
 if __name__ == '__main__':
 	main()
+

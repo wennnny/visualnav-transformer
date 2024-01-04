@@ -12,7 +12,7 @@ vel_msg = Twist()
 CONFIG_PATH = "../config/robot.yaml"
 with open(CONFIG_PATH, "r") as f:
 	robot_config = yaml.safe_load(f)
-MAX_V = 0.4
+MAX_V = 0.2
 MAX_W = 0.8
 VEL_TOPIC = robot_config["vel_teleop_topic"]
 JOY_CONFIG_PATH = "../config/joystick.yaml"
@@ -31,6 +31,7 @@ bumper = False
 def callback_joy(data: Joy):
 	"""Callback function for the joystick subscriber"""
 	global vel_msg, button, bumper
+	print(f"Button states: {data.buttons}")
 	button = data.buttons[DEADMAN_SWITCH] 
 	bumper_button = data.buttons[DEADMAN_SWITCH - 1]
 	if button is not None: # hold down the dead-man switch to teleop the robot
@@ -43,8 +44,6 @@ def callback_joy(data: Joy):
 		bumper = bool(data.buttons[DEADMAN_SWITCH - 1])
 	else:
 		bumper = False
-
-
 
 def main():
 	rospy.init_node("Joy2Locobot", anonymous=False)

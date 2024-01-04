@@ -86,9 +86,9 @@ def main(args: argparse.Namespace):
     model = model.to(device)
     model.eval()
 
-    num_diffusion_iters = model_params["num_diffusion_iters"]
+    num_diffusion_iters = model_params["num_images_log"]
     noise_scheduler = DDPMScheduler(
-        num_train_timesteps=model_params["num_diffusion_iters"],
+        num_train_timesteps=model_params["num_images_log"],
         beta_schedule='squaredcos_cap_v2',
         clip_sample=True,
         prediction_type='epsilon'
